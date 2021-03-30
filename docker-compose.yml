@@ -18,3 +18,20 @@ services:
       - "8000:8000"
     depends_on:
       - db
+  
+
+  zookeeper:
+    image: zookeeper:3.4.9
+    volumes:
+      - ./volumes/zookeeper/data:/data
+     
+  kafka:
+    image: wurstmeister/kafka
+    depends_on:
+      - zookeeper
+    volumes:
+      - ./volumes/kafka/data:/kafka
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper
+      KAFKA_BROKER_ID: 1
