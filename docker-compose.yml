@@ -18,20 +18,30 @@ services:
       - "8000:8000"
     depends_on:
       - db
+      - zookeeper
+      - kafka
+    environment:
+      KAFKA_NODES: 'kafka:9092'
+      KAFKA_CONSUMER_API_VERSION: '1.0.0'
+      KAFKA_PRODUCER_API_VERSION: '1.0.0'
   
 
   zookeeper:
-    image: zookeeper:3.4.9
-    volumes:
-      - ./volumes/zookeeper/data:/data
+    image: wurstmeister/zookeeper:3.4.6
+    ports:
+     - "2181:2181"
      
   kafka:
-    image: wurstmeister/kafka
-    depends_on:
-      - zookeeper
-    volumes:
-      - ./volumes/kafka/data:/kafka
+    image: wurstmeister/kafka:2.12-2.3.0
+    ports:
+     - "9092:9092"
+    expose:
+     - "9093"
     environment:
-      KAFKA_ADVERTISED_HOST_NAME: kafka
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper
-      KAFKA_BROKER_ID: 1
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9093,OUTSIDE://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
