@@ -12,3 +12,4 @@ then you can start the containers using: `docker-compose up`
 - the kafka part was soueced from:
  - https://medium.com/big-data-engineering/hello-kafka-world-the-complete-guide-to-kafka-with-docker-and-python-f788e2588cfc
  - https://github.com/wurstmeister/kafka-docker
+- https://realpython.com/django-rest-framework-quick-start/
